@@ -35,7 +35,10 @@ Class containing functions for performing different operations of food bank.
 - Generating report
 
 # Data Structure Used
-List, Set, Tuple, Dictionary
+- > List: For storing distribution history.
+- > Set: For keeping unique Family ID records.
+- > Tuple: For storing single distribution record.
+- > Dictionary:  For storing registered family objects by using Family ID as key.
 
 
 ## Technologies Used
