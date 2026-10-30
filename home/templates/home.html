@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Community Food Bank</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f3f4f6;
+            margin: 0;
+            padding: 30px;
+            color: #222;
+        }
+
+        h1 {
+            text-align: center;
+            color: #166534;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: auto;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            margin: 18px 0;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px #ddd;
+        }
+
+        input, select, button {
+            padding: 10px;
+            margin: 6px 0;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        button {
+            background: #15803d;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        button:hover {
+            background: #166534;
+        }
+
+        .message {
+            padding: 10px;
+            background: #dcfce7;
+            margin: 8px 0;
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+
+    <h1>Community Food Bank</h1>
+    <p style="text-align:center">
+        Helping families through food distribution
+    </p>
+
+    {% for message in messages %}
+        <div class="message">{{ message }}</div>
+    {% endfor %}
+
+    <div class="card">
+        <h2>Food Stock</h2>
+        <h3>{{ stock.quantity }} units available</h3>
+        <p>Total Distributed: {{ total_distributed }} units</p>
+    </div>
+
+    <div class="card">
+        <h2>Register Family</h2>
+        <form method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="register">
+            <input type="text" name="name"
+                   placeholder="Family Name" required>
+            <input type="number" name="members"
+                   placeholder="Number of Members"
+                   min="1" required>
+            <button type="submit">Register Family</button>
+        </form>
+    </div>
+
+    <div class="card">
+        <h2>Add Food Stock</h2>
+        <form method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="add_stock">
+            <input type="number" name="quantity"
+                   placeholder="Food Quantity" min="1" required>
+            <button type="submit">Add Stock</button>
+        </form>
+    </div>
+
+    <div class="card">
+        <h2>Distribute Food</h2>
+        <form method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="distribute">
+
+            <select name="family_id" required>
+                <option value="">Select Family</option>
+                {% for family in families %}
+                    <option value="{{ family.id }}">
+                        {{ family.name }}
+                    </option>
+                {% endfor %}
+            </select>
+
+            <input type="number" name="quantity"
+                   placeholder="Food Quantity" min="1" required>
+            <button type="submit">Distribute Food</button>
+        </form>
+    </div>
+
+    <div class="card">
+        <h2>Registered Families</h2>
+        {% for family in families %}
+            <p>{{ family.name }} — {{ family.member_count }} members</p>
+        {% empty %}
+            <p>No families registered yet.</p>
+        {% endfor %}
+    </div>
+
+    <div class="card">
+        <h2>Distribution History</h2>
+        {% for item in history %}
+            <p>
+                {{ item.family.name }} —
+                {{ item.quantity }} units —
+                {{ item.date }}
+            </p>
+        {% empty %}
+            <p>No distribution history yet.</p>
+        {% endfor %}
+    </div>
+
+</div>
+</body>
+</html>
